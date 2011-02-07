@@ -7,7 +7,7 @@
 BEGIN {
 package Question;
 require 5.10.0;
-our	$VERSION = '2.0.1';
+our	$VERSION = '2.0.2';
 our     @ISA     = ();
 use	feature 'switch';
 use	strict;
