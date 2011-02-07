@@ -7,7 +7,7 @@
 BEGIN {
 package Delete;
 require 5.10.0;
-our	$VERSION = '2.0.0';
+our	$VERSION = '2.0.1';
 our     @ISA     = ();
 use	feature 'switch';
 use	strict;
