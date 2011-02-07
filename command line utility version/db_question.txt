@@ -1,0 +1,32 @@
+Query data of a FastDB database. Synopsis:
+
+Show version
+        db_question.pl --version  (or -v --ver   etc ...)
+This help screen
+        db_question.pl --help     (or -h --help  etc ...)
+How to load data
+        db_question.pl [--config $ConfigFile]
+Examples
+        db_question.pl
+        db_question.pl -v
+        db_question.pl --input c:\Load\log\daily.csv
+        db_question.pl --config /etc/load.cfg  --input /opt/AppF/data
+
+
+--config is optional. It is the path of the delete configuration
+file. If it is missing, program search for a file called
+db_delete.conf  at the same directory it resides.
+
+At the configuration file write the filters and conditions
+for the returned data. Also you define what to do the found data.
+
+Every filter is applied only to its column
+Conditions applied to all columns.
+Filtees are much faster than conditions because.
+Do not use conditions if you can narrow your selection with Filters.
+
+
+George Bouras
+1 Feb 2010
+Greece, Athens
+gravitalsun@hotmail.com

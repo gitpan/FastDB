@@ -1,0 +1,46 @@
+Load data to FastDB database. Syntax:
+
+Show version
+        db_load.pl --version  (or -v --ver   etc ...)
+This help screen
+        db_load.pl --help     (or -h --help  etc ...)
+How to load data
+        db_load.pl [--input $DataFile] [--config $ConfigFile]
+Examples
+        db_load.pl
+        db_load.pl -v
+        db_load.pl --input c:\Load\log\daily.csv
+        db_load.pl --config /etc/load.cfg  --input /opt/AppF/data
+
+--input is optional.  It is the path of your input data file you
+want to load at the database. If it is missing, program search for
+a file called  data.csv  at the same directory it resides.
+
+--config is optional. It is the path of the loading configuration
+file. If it is missing, program search for a file called
+db_load.conf  at the same directory it resides.
+
+At load time you can have extra columns. Define them at your configuration
+file at "Extra virtual columns"  Their values are  calculated dynamic at execution time. These are:
+
+	EXTRA_DAY          DD              01   - 31
+	EXTRA_MONTH        MM              01   - 12
+	EXTRA_YEAR         YYYY            1970 - 3517
+	EXTRA_HOUR         hh              00   - 23
+	EXTRA_MINUTE       mm              00   - 59
+	EXTRA_SECOND       ss              00   - 59
+	EXTRA_TIMESTAMP    YYYYMMDDhhmmss  20101201123957
+
+Configuration file settings
+
+Columns with indexes     : define the columns you want to index
+Extra virtual columns    : Which extra columns you want to use
+Do not load these fields : which columns you want to not load their data. Leave it blank to load all columns
+
+There is implemented de-duplication technology. That means the index names
+are removed from the fields that are written at db.
+
+George Mpouras
+1 Feb 2011
+Greece, Athens
+gravitalsun@hotmail.com

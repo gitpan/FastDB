@@ -1,0 +1,31 @@
+FastDB is working as is to ALL operating systems with Perl 5.1 or greater.
+
+There is a case to have problem at windows when you have multiple
+indexes with very long values because of the 255 characters NTFS max path
+limitation.
+
+It is recommented to use a linux partition (or mounted file) formatted
+with btrfs file system
+
+Because this module is implemented with pure Perl it is enough to copy
+FastDB directory somewhere at your @INC . For your convenient you can use
+the following commands to install/uninstall the module
+
+Install:     setup_module.pl --install   --module=FastDB
+Uninstall:   setup_module.pl --uninstall --module=FastDB
+  
+Or you can manual copy FastDB directory where your script is.
+To produce updated documentation files issue the commands
+
+pod2html --infile=./FastDB/Load.pm --outfile=FastDB-Load.html
+pod2text          ./FastDB/Load.pm     "how to load data.txt"
+
+pod2html --infile=./FastDB/Delete.pm --outfile=FastDB-Delete.html
+pod2text          ./FastDB/Delete.pm     "how to delete data.txt"
+
+pod2html --infile=./FastDB/Question.pm --outfile=FastDB-Question.html
+pod2text          ./FastDB/Question.pm     "how to ask questions.txt"
+
+George Mpouras (gravitalsun@hotmail.com)
+5 Feb 2011
+Athens, Greece

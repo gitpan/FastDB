@@ -1,0 +1,241 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FastDB::Load - Load data to FastDB database</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#example">EXAMPLE</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">Functions</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#install">INSTALL</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>FastDB::Load - Load data to FastDB database</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+        <span class="keyword">use</span> <span class="variable">FastDB::Load</span><span class="operator">;</span>
+</pre>
+<pre>
+        <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">Load</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span>
+        <span class="string">'Name'</span>                     <span class="operator">=&gt;</span> <span class="string">'Database name'</span><span class="operator">,</span>
+        <span class="string">'Data store location'</span>      <span class="operator">=&gt;</span> <span class="string">'Directory to store the data'</span><span class="operator">,</span>
+        <span class="string">'Field separator string'</span>   <span class="operator">=&gt;</span> <span class="string">'|'</span>  <span class="operator">,</span>
+        <span class="string">'Original field names'</span>     <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="variable">Columns</span>         <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Indexed fields'</span>           <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="variable">Indexed</span> <span class="variable">columns</span> <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Extra virtual fields'</span>     <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="variable">Extra</span>   <span class="variable">columns</span> <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Transform'</span>                <span class="operator">=&gt;</span> <span class="operator">[</span>
+                                      <span class="string">'Some column 1'</span> <span class="operator">=&gt;</span> <span class="string">'my $a = lc DATA; $a = reverse $a; return $a;'</span><span class="operator">,</span>
+                                      <span class="string">'Some column 2'</span> <span class="operator">=&gt;</span> <span class="string">'lc DATA'</span>                <span class="operator">,</span>
+                                      <span class="string">'Some column 3'</span> <span class="operator">=&gt;</span> <span class="string">'uc DATA;'</span>               <span class="operator">,</span>
+                                      <span class="operator">]</span>
+        <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'a1'</span> <span class="operator">,</span> <span class="string">'a2'</span><span class="operator">,</span> <span class="string">'a3'</span><span class="operator">,</span> <span class="operator">...</span>  <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'b1'</span> <span class="operator">,</span> <span class="string">'b2'</span><span class="operator">,</span> <span class="string">'c3'</span><span class="operator">,</span> <span class="operator">...</span>  <span class="operator">);</span>
+        <span class="operator">...</span>
+        <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">Write_statistics_at_the_end</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<pre>
+        <span class="comment">#!/usr/bin/perl</span>
+        <span class="comment">#</span>
+        <span class="comment"># Example of FastDB::Load . Extra virtual fields you can optional use:</span>
+        <span class="comment">#</span>
+        <span class="comment">#       EXTRA_DAY          01  - 31</span>
+        <span class="comment">#       EXTRA_DAY_NAME     Sun - Sat</span>
+        <span class="comment">#       EXTRA_MONTH_NAME   Jan - Dec</span>
+        <span class="comment">#       EXTRA_MONTH        01  - 12</span>
+        <span class="comment">#       EXTRA_YEAR         1453</span>
+        <span class="comment">#       EXTRA_HOUR         00  - 23</span>
+        <span class="comment">#       EXTRA_MINUTE       00  - 59</span>
+        <span class="comment">#       EXTRA_SECOND       00  - 59</span>
+        <span class="comment">#       EXTRA_TIMESTAMP    20101201123957  ( YYYYMMDDhhmmss )</span>
+</pre>
+<pre>
+        <span class="keyword">use</span> <span class="variable">FastDB::Load</span><span class="operator">;</span>
+        <span class="keyword">my</span> <span class="variable">$load</span> <span class="operator">=</span> <span class="variable">Load</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span>
+</pre>
+<pre>
+        <span class="string">'Name'</span>                     <span class="operator">=&gt;</span> <span class="string">'Export cargo'</span>                                           <span class="operator">,</span>
+        <span class="string">'Data store location'</span>      <span class="operator">=&gt;</span> <span class="string">'/work/FastDB test/db'</span>                                   <span class="operator">,</span>
+        <span class="string">'Field separator string'</span>   <span class="operator">=&gt;</span> <span class="string">','</span>                                                      <span class="operator">,</span>
+        <span class="string">'Original field names'</span>     <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="string">'COLOR'</span><span class="operator">,</span> <span class="string">'HEIGHT'</span><span class="operator">,</span> <span class="string">'WEIGHT'</span><span class="operator">,</span> <span class="string">'TYPE'</span><span class="operator">,</span> <span class="string">'ID'</span><span class="operator">,</span> <span class="string">'COUNTRY'</span> <span class="operator">]</span> <span class="operator">,</span>
+        <span class="string">'Indexed fields'</span>           <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="string">'WEIGHT'</span> <span class="operator">,</span> <span class="string">'EXTRA_YEAR'</span> <span class="operator">]</span>                              <span class="operator">,</span>
+        <span class="string">'Extra virtual fields'</span>     <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="string">'EXTRA_TIMESTAMP'</span><span class="operator">,</span> <span class="string">'EXTRA_YEAR'</span><span class="operator">,</span> <span class="string">'EXTRA_DAY_NAME'</span> <span class="operator">]</span>    <span class="operator">,</span>
+        <span class="string">'Transform'</span>                <span class="operator">=&gt;</span> <span class="operator">[</span>
+                                      <span class="string">'COLOR'</span>   <span class="operator">=&gt;</span> <span class="string">'my $a = lc DATA; $a'</span>  <span class="operator">,</span>
+                                      <span class="string">'TYPE'</span>    <span class="operator">=&gt;</span> <span class="string">'uc DATA;'</span>             <span class="operator">,</span>
+                                      <span class="string">'ID'</span>      <span class="operator">=&gt;</span>  <span class="string">'"&lt;id&gt;DATA&lt;/id&gt;"'</span>     <span class="operator">,</span>
+                                      <span class="string">'COUNTRY'</span> <span class="operator">=&gt;</span> <span class="string">'uc DATA'</span>              <span class="operator">,</span>
+                                      <span class="operator">]</span>
+        <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Green'</span> <span class="operator">,</span> <span class="number">10</span><span class="operator">,</span> <span class="number">1500</span><span class="operator">,</span> <span class="string">'mech22'</span><span class="operator">,</span> <span class="string">'A100'</span><span class="operator">,</span> <span class="string">'New Zeland'</span>   <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Brown'</span> <span class="operator">,</span> <span class="number">10</span><span class="operator">,</span> <span class="number">1500</span><span class="operator">,</span> <span class="string">'mech22'</span><span class="operator">,</span> <span class="string">'A100'</span><span class="operator">,</span> <span class="string">'India'</span>        <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Green'</span> <span class="operator">,</span> <span class="number">11</span><span class="operator">,</span> <span class="number">3500</span><span class="operator">,</span> <span class="string">'mech23'</span><span class="operator">,</span> <span class="string">'B100'</span><span class="operator">,</span> <span class="string">'Australia'</span>    <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Yellow'</span><span class="operator">,</span>  <span class="number">7</span><span class="operator">,</span> <span class="number">2500</span><span class="operator">,</span> <span class="string">'mech21'</span><span class="operator">,</span> <span class="string">'C100'</span><span class="operator">,</span> <span class="string">'South Africa'</span> <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Red'</span>   <span class="operator">,</span> <span class="number">14</span><span class="operator">,</span> <span class="number">2500</span><span class="operator">,</span> <span class="string">'mech21'</span><span class="operator">,</span> <span class="string">'D001'</span><span class="operator">,</span> <span class="string">'U.S. Montana'</span> <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'Red'</span>   <span class="operator">,</span> <span class="number">17</span><span class="operator">,</span> <span class="number">5500</span><span class="operator">,</span> <span class="string">'mech32'</span><span class="operator">,</span> <span class="string">'D101'</span><span class="operator">,</span> <span class="string">'U.S. Montana'</span> <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'White'</span> <span class="operator">,</span> <span class="number">21</span><span class="operator">,</span>  <span class="number">700</span><span class="operator">,</span> <span class="string">'snow02'</span><span class="operator">,</span> <span class="string">'E002'</span><span class="operator">,</span> <span class="string">'North Pole'</span>   <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">load</span><span class="operator">(</span> <span class="string">'White'</span> <span class="operator">,</span> <span class="number">21</span><span class="operator">,</span>  <span class="number">700</span><span class="operator">,</span> <span class="string">'snow02'</span><span class="operator">,</span> <span class="string">'E002'</span><span class="operator">,</span> <span class="string">'South Pole'</span>   <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="comment"># Optional write some short information about your load</span>
+        <span class="comment">#       $load-&gt;Write_statistics_at_the_end();</span>
+        <span class="comment">#       $load-&gt;Write_statistics_at_the_end( $SomeFile );</span>
+        <span class="comment">#       $load-&gt;Write_statistics_at_the_end( "$load-&gt;{'Data store location'}/$load-&gt;{'Name'}.log" );</span>
+        
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">Write_statistics_at_the_end</span><span class="operator">();</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>FastDB is a file based database. It is using directories to store the indexed
+columns. Also there is implemented deduplication to avoid storing the same data
+where it is possible. Your database and its schema will be created at first
+data load. After the first data load it is not possible to add or remove columns.</p>
+<p>It is written at Pure perl, so it can run on all operating systems. It is
+designed to give answers as fast your disk and operating system is.</p>
+<p>This module load your data to a FastDB database. At loading time you can
+edit your data of every column using generic Perl code defined at the
+property 'Transform'. Its column should have its own code. You can have
+transform to one or more columns. The special string DATA (or data) is
+replaced with the currect column value, at loading time
+'Transform' is optional, do not use it if you do not want.</p>
+<p>At the end of loading it is suggested to call the optional function 'Write_statistics_at_the_end'  to write some short info to a file.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">Functions</a></h1>
+<dl>
+<dt><strong><a name="new" class="item">my $load = Load-&gt;new( %hash );</a></strong></dt>
+
+<dd>
+<p>Creates a new FastDB::Load object. %hash must have the keys</p>
+<p><strong><em>Data store location</em></strong></p>
+<p>The root directory that will hold your data</p>
+<p><strong><em>Name</em></strong></p>
+<p>The name of your database. This will also become a subdirectory of the <strong><em>Data store location</em></strong></p>
+<p><strong><em>Field separator string</em></strong></p>
+<p>This is used internal to separated columns from each other. Can be more than one characters. You must select a string that there is no case to be found at your data</p>
+<p><strong><em>Extra virtual fields</em></strong></p>
+<p>At loading time you can optional load the following fields that do not exists at your data . Their values
+calculated at loading time. The values may change if your load continue for long time.
+The name of these fields and some sample values are</p>
+<pre>
+        EXTRA_DAY          01  - 31
+        EXTRA_DAY_NAME     Sun - Sat
+        EXTRA_MONTH_NAME   Jan - Dec
+        EXTRA_MONTH        01  - 12
+        EXTRA_YEAR         2012
+        EXTRA_HOUR         00  - 23
+        EXTRA_MINUTE       00  - 59
+        EXTRA_SECOND       00  - 59
+        EXTRA_TIMESTAMP    20121201123957  ( YYYYMMDDhhmmss )</pre>
+<p><strong><em>Original field names</em></strong></p>
+<p>An array reference of your column names. Do not include here again the <strong><em>Extra virtual fields</em></strong>
+The case is important. Field names must not contain the character |</p>
+<p><strong><em>Indexed fields</em></strong></p>
+<p>An array reference of the columns you want to index. You define any any original or extra field.
+Do not define more than you really need. These will become subdirectories.</p>
+<p><strong><em>Transform</em></strong></p>
+<p>An array reference with the data transformations . You can use this, to transfrom your data at loading time.
+You define the column name and some Perl code. Perl code is applied over column data, and FastDB is storing
+its returned value. The special string DATA is replaced at loading time with the current value.
+Every Transformation is applied only to its column. You can not use column names inside the Perl code.
+The order of 'Transform' is not important. Its syntax is</p>
+<pre>
+        <span class="string">'SOME COLUMN 1'</span> <span class="operator">=&gt;</span> <span class="string">'Perl code do something with the "DATA"'</span><span class="operator">,</span>
+        <span class="string">'SOME COLUMN 2'</span> <span class="operator">=&gt;</span> <span class="string">'ucfirst DATA'</span><span class="operator">,</span>
+        <span class="string">'SOME COLUMN 3'</span> <span class="operator">=&gt;</span> <span class="string">'my $var = DATA ; blah blah blah ; $var'</span><span class="operator">,</span>
+        <span class="keyword">and</span> <span class="variable">so</span> <span class="variable">on</span>
+</pre>
+</dd>
+<dt><strong><a name="load" class="item">$load-&gt;load( col1, col2, ... );</a></strong></dt>
+
+<dd>
+<p>A list of data you want to store as a row. The fields order should be the same as the column names at <strong><em>Original field names</em></strong></p>
+<p>normally you will put this inside a loop that read and split lines from a file, socket or whatever.</p>
+</dd>
+<dt><strong><a name="write_statistics_at_the_end" class="item">$load-&gt;Write_statistics_at_the_end( [SomefFile] );</a></strong></dt>
+
+<dd>
+<p>Optional method. Writes to a file how many rows loaded and long it took. It takes as optional argument the file
+to write this info to. If you do not specify an file it will use the string
+&quot;$load-&gt;{'Data store location'}/$load-&gt;{'Name'}.log&quot;</p>
+<pre>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">Write_statistics_at_the_end</span><span class="operator">();</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">Write_statistics_at_the_end</span><span class="operator">(</span> <span class="variable">$SomeFile</span> <span class="operator">);</span>
+        <span class="variable">$load</span><span class="operator">-&gt;</span><span class="variable">Write_statistics_at_the_end</span><span class="operator">(</span> <span class="string">"</span><span class="variable">$load</span><span class="string">-&gt;{'Data store location'}/</span><span class="variable">$load</span><span class="string">-&gt;{'Name'}.log"</span> <span class="operator">);</span>
+</pre>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>There is a case to have problem at microsoft windows when you have multiple
+indexes with long values because of the 255 characters NTFS max
+path limitation.</p>
+<p>It is recommented to use a linux partition (or a mounted file)
+formatted with btrfs file system ( ext4 is also good but not as fast as btrfs). Ext3, Fat16 are not recommended.</p>
+<p>
+</p>
+<hr />
+<h1><a name="install">INSTALL</a></h1>
+<p>Because this module is implemented with pure Perl it is enough to copy FastDB directory somewhere at your @INC
+or where your script is. For your convenient you can use the following commands to install/uninstall the module</p>
+<pre>
+        Install:     setup_module.pl –-install   --module=FastDB</pre>
+<pre>
+        Uninstall:   setup_module.pl –-uninstall --module=FastDB</pre>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Author:
+<a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> (George Mpouras)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (c) 2011, George Mpouras, <a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> All rights reserved.</p>
+<p>This program is free software; you may redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,264 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FastDB::Question - Ask questions to FastDB database and get back the answers</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#example">EXAMPLE</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">Functions</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#install">INSTALL</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>FastDB::Question - Ask questions to FastDB database and get back the answers</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+        <span class="keyword">use</span> <span class="variable">FastDB::Question</span><span class="operator">;</span>
+        
+        <span class="keyword">my</span> <span class="variable">$obj</span>    <span class="operator">=</span> <span class="variable">Load</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="variable">$SchemaFile</span> <span class="operator">);</span>
+        <span class="keyword">my</span> <span class="variable">$answer</span> <span class="operator">=</span> <span class="variable">$qry</span><span class="operator">-&gt;</span><span class="variable">question</span><span class="operator">(</span> <span class="variable">%hash</span> <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="keyword">foreach</span> <span class="keyword">my</span> <span class="variable">$row</span> <span class="operator">(</span><span class="variable">@</span><span class="operator">{</span><span class="variable">$answer</span><span class="operator">}</span><span class="operator">)</span> <span class="operator">{</span> <span class="keyword">print</span> <span class="string">"Columns : @{</span><span class="variable">$row</span><span class="string">}\n"</span> <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<pre>
+        <span class="keyword">use</span> <span class="variable">FastDB::Question</span><span class="operator">;</span>
+</pre>
+<pre>
+        <span class="keyword">my</span> <span class="variable">$qry</span>    <span class="operator">=</span> <span class="variable">Question</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span> <span class="string">'/work/FastDB test/db/Export cargo.schema'</span> <span class="operator">);</span>
+        <span class="keyword">my</span> <span class="variable">$answer</span> <span class="operator">=</span> <span class="variable">$qry</span><span class="operator">-&gt;</span><span class="variable">question</span><span class="operator">(</span>
+        
+        <span class="string">'Fields to return'</span> <span class="operator">=&gt;</span> <span class="operator">[</span> <span class="string">'TYPE'</span><span class="operator">,</span> <span class="string">'WEIGHT'</span><span class="operator">,</span> <span class="string">'COUNTRY'</span><span class="operator">,</span> <span class="string">'COLOR'</span> <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Filters'</span>          <span class="operator">=&gt;</span>
+                              <span class="operator">[</span>
+                              <span class="string">'WEIGHT'</span> <span class="operator">=&gt;</span> <span class="string">'( DATA &gt; 800 ) and ( DATA &lt; 8000 )'</span>  <span class="operator">,</span>
+                              <span class="string">'COLOR'</span>  <span class="operator">=&gt;</span> <span class="string">'dATA =~/(green|brown|red)/i'</span>         <span class="operator">,</span>
+                              <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Conditions'</span>       <span class="operator">=&gt;</span>
+                              <span class="operator">[</span>
+                              <span class="string">'(WEIGHT &gt;= 1500) and TYPE=~/2/'</span><span class="operator">,</span>
+                              <span class="string">'((COLOR eq "blue") or (COLOR eq "red")) and (COUNTRY eq "France")'</span>
+                              <span class="operator">]</span><span class="operator">,</span>
+        <span class="string">'Results'</span>          <span class="operator">=&gt;</span>
+                              <span class="operator">[</span>
+                              <span class="string">'Return an array of arrays'</span>             <span class="operator">=&gt;</span> <span class="string">'Yes'</span>           <span class="operator">,</span>
+                              <span class="string">'Print to standard output'</span>              <span class="operator">=&gt;</span> <span class="string">'No '</span>           <span class="operator">,</span>
+                              <span class="string">'Print to standard error'</span>               <span class="operator">=&gt;</span> <span class="string">'no'</span>            <span class="operator">,</span>
+                              <span class="string">'Print to file'</span>                         <span class="operator">=&gt;</span> <span class="string">'Yes'</span>           <span class="operator">,</span>
+                              <span class="string">'File name'</span>                             <span class="operator">=&gt;</span> <span class="string">'/tmp/OUTPUT.TXT'</span><span class="operator">,</span>
+                              <span class="string">'Pass to external Perl module'</span>          <span class="operator">=&gt;</span> <span class="string">'Yes'</span>           <span class="operator">,</span>
+                              <span class="string">'Perl module name'</span>                      <span class="operator">=&gt;</span> <span class="string">'MIME::Base64'</span>  <span class="operator">,</span>
+                              <span class="string">'Function of the Perl module'</span>           <span class="operator">=&gt;</span> <span class="string">'encode_base64'</span> <span class="operator">,</span>
+                              <span class="string">'Code of how to pass data at function'</span>  <span class="operator">=&gt;</span> <span class="string">'join ",", @_'</span>  <span class="operator">,</span>
+                              <span class="operator">]</span>
+        <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="keyword">print</span> <span class="string">"No data or 'Return an array of arrays' is set to No\n"</span> <span class="keyword">if</span> <span class="number">0</span> <span class="operator">==</span> <span class="keyword">scalar</span> <span class="variable">@</span><span class="operator">{</span><span class="variable">$answer</span><span class="operator">}</span><span class="operator">;</span>
+        <span class="keyword">foreach</span> <span class="keyword">my</span> <span class="variable">$row</span> <span class="operator">(</span><span class="variable">@</span><span class="operator">{</span><span class="variable">$answer</span><span class="operator">}</span><span class="operator">)</span> <span class="operator">{</span>
+        <span class="keyword">print</span> <span class="string">"columns : @{</span><span class="variable">$row</span><span class="string">}\n"</span>
+        <span class="operator">}</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Ask questions to FastDB and to something with the found data. It is designed to provide unparallel speed. With correct indexes and questions you can get your data back much faster than other big database vendors.
+You have two methods to select your data. Filters and Conditions. Filters are always faster than conditions. Conditions are applied to all columns, while every Filter is applied only to the column it is assigned to. It is also fast if you combine both Filters and Conditions. Good practice is to index the columns you are usually applying Filters.</p>
+<p>Do not use conditions if you can do the same selection with Filters only.</p>
+<p>You have several options of what to do the found data. For example you can pass them to another external perl module, or you can write them to file. All options except  'Return an array of arrays' are real time. That means they do something with the data the moment they found before the question finish. 
+The answer can be several Terabytes with billions of lines, and the Perl process will not consume more memory than a simple “hello world”.
+This cannot be done if 'Return an array of arrays' is set to ‘yes’ because at this case all data must be kept in memory , so do not set it for huge amount of returned data.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">Functions</a></h1>
+<dl>
+<dt><strong><a name="new" class="item">my $qry = Question-&gt;new( $SchemaFile );</a></strong></dt>
+
+<dd>
+<p>Creates a new FastDB::Question object. its only argument is database schema file.
+The schema file is a unique file for every database, and it is created at first data load, inside data directory. Its name is &quot;$DatabaseName.schema&quot;</p>
+</dd>
+<dt><strong><a name="question" class="item">$qry-&gt;question( %hash )</a></strong></dt>
+
+<dd>
+<p>Queries the database and do something with returned data. The %hash should have the keys</p>
+<p><strong><em>Fields to return</em></strong></p>
+<p>It is an array reference, of the columns you want to select. The column names are case sensitive. You can define as many columns you want, for example</p>
+<p>[ 'TYPE', 'WEIGHT', 'COUNTRY', 'COLOR' ],</p>
+<p><strong><em>Filters</em></strong></p>
+<p>An array reference containing pairs of Columns and its assigned generic Perl code. They used for narrowing data selection.</p>
+<p>You can have multiple Filters. Every Filter is assigned only to its column. At Perl code you can not write column names.
+The Filter's order is not important. Every Filter is simple Perl code. Every filter can have multipe code lines separated by the ;
+The last returned value of your code is examined if it is TRUE or FALSE.
+The special string DATA is replaced with column values. For example:</p>
+<pre>
+        'Filters' =&gt;
+        [
+        'YEAR'   =&gt;  'DATA == 2009'                       ,
+        'MONTH'  =&gt;  'DATA eq &quot;12&quot;'                       ,
+        'DAY'    =&gt;  'DATA eq &quot;01&quot;'                       ,
+        'HOUR'   =&gt; '(DATA ge &quot;07&quot; ) and (DATA le &quot;07&quot;)'  ,
+        'MINUTE' =&gt; '(DATA ge &quot;57&quot; ) and (DATA le &quot;57&quot;)'  ,
+        'SECOND' =&gt; '(DATA ge &quot;48&quot; ) and (DATA le &quot;48&quot;)'  ,
+        'COL8'   =&gt;  'DATA =~/^49/'
+        ],</pre>
+<p>Filters work faster if their columns are indexed. Indexed columns are defined at first data load using the package FastDB::Load</p>
+<p><strong><em>Conditions</em></strong></p>
+<p>An array reference containing pieces of Perl code. They used for narrowing data selection.
+Inside the Perl code you write any column you want , and its name is replaced by its value. Every condition can
+have multipe code lines separated by the ;    The last returned value of your code is examined if it is TRUE or FALSE.  For example</p>
+<pre>
+        'Conditions' =&gt;
+                      [
+                      '(WEIGHT &gt;= 1500) and TYPE=~/2/'      ,
+                      '((COLOR eq &quot;green&quot;) or (COLOR eq &quot;red&quot;)) and (COUNTRY eq &quot;New Zeland&quot;)'
+                      ],</pre>
+<p>Conditions are slower than Filters and you must avoid them if you can have the same selection using only Filters.
+But as you can use all columns you can built more complex expressions than Filters. You can have multiple Conditions.</p>
+<p><strong><em>Results</em></strong></p>
+<p>An array reference containing (as hash) settings and their values concerning how the results of the question should evaluated.
+There setting are</p>
+<pre>
+        <span class="string">'Return an array of arrays'</span>  <span class="operator">=&gt;</span>  <span class="string">'Yes'</span> <span class="keyword">or</span> <span class="string">'no'</span>
+        
+                <span class="variable">If</span> <span class="variable">it</span> <span class="variable">is</span> <span class="variable">yes</span> <span class="variable">then</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">returned</span> <span class="variable">as</span> <span class="variable">an</span> <span class="variable">array</span> <span class="variable">of</span> <span class="variable">arrays</span><span class="operator">.</span>
+                <span class="variable">All</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">kept</span> <span class="variable">is</span> <span class="keyword">system</span> <span class="variable">memory</span> <span class="keyword">and</span> <span class="variable">returned</span> <span class="variable">all</span> <span class="variable">together</span> <span class="keyword">when</span> <span class="variable">the</span> <span class="variable">question</span>
+                <span class="variable">is</span> <span class="variable">finished</span><span class="operator">.</span> <span class="variable">Be</span> <span class="variable">careful</span> <span class="variable">with</span> <span class="variable">this</span> <span class="variable">option</span> <span class="keyword">when</span> <span class="variable">the</span> <span class="variable">estimated</span> <span class="variable">size</span> <span class="variable">of</span> <span class="variable">returned</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">many</span> <span class="variable">gigabytes</span><span class="operator">.</span>
+                <span class="variable">A</span> <span class="variable">sampe</span> <span class="variable">code</span> <span class="variable">to</span> <span class="variable">dispatch</span> <span class="variable">the</span> <span class="variable">answer</span> <span class="variable">is</span>
+                
+                <span class="keyword">foreach</span> <span class="keyword">my</span> <span class="variable">$row</span> <span class="operator">(</span><span class="variable">@</span><span class="operator">{</span><span class="variable">$answer</span><span class="operator">}</span><span class="operator">)</span> <span class="operator">{</span> <span class="keyword">print</span> <span class="string">"Columns: @{</span><span class="variable">$row</span><span class="string">}\n"</span> <span class="operator">}</span> 
+        
+        <span class="string">'Print to standard output'</span>  <span class="operator">=&gt;</span>  <span class="string">'Yes'</span> <span class="keyword">or</span> <span class="string">'no'</span>
+        
+                <span class="variable">If</span> <span class="variable">it</span> <span class="variable">is</span> <span class="variable">yes</span> <span class="variable">then</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">printed</span> <span class="variable">at</span> <span class="variable">standard</span> <span class="variable">output</span> <span class="operator">(</span><span class="variable">usually</span> <span class="variable">the</span> <span class="variable">screen</span><span class="operator">)</span>
+                <span class="variable">at</span> <span class="variable">the</span> <span class="variable">moment</span> <span class="variable">they</span> <span class="variable">found</span> <span class="keyword">while</span> <span class="variable">the</span> <span class="variable">question</span> <span class="variable">is</span> <span class="variable">still</span> <span class="variable">working</span><span class="operator">.</span> <span class="variable">Does</span> <span class="keyword">not</span> <span class="variable">consume</span> <span class="keyword">system</span> <span class="variable">memory</span> <span class="keyword">no</span> <span class="variable">matter</span> <span class="variable">how</span> <span class="variable">much</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span><span class="operator">.</span>
+        
+        <span class="string">'Print to standard error'</span>  <span class="operator">=&gt;</span>  <span class="string">'Yes'</span> <span class="keyword">or</span> <span class="string">'no'</span>
+</pre>
+<pre>
+                If it is yes then the found data are printed at standard error at the moment they found while the question is still working. Does not consume system memory no matter how much the found data are.</pre>
+<pre>
+        <span class="string">'Print to file'</span>  <span class="operator">=&gt;</span>  <span class="string">'Yes'</span> <span class="keyword">or</span> <span class="string">'no'</span>
+                
+                <span class="variable">If</span> <span class="variable">it</span> <span class="variable">is</span> <span class="variable">yes</span> <span class="variable">then</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">printed</span> <span class="variable">at</span> <span class="variable">the</span> <span class="variable">specified</span> <span class="variable">file</span> <span class="variable">at</span> <span class="variable">the</span> <span class="variable">moment</span> <span class="variable">they</span> <span class="variable">found</span> <span class="keyword">while</span> <span class="variable">the</span> <span class="variable">question</span> <span class="variable">is</span> <span class="variable">still</span> <span class="variable">working</span><span class="operator">.</span> <span class="variable">Does</span> <span class="keyword">not</span> <span class="variable">consume</span> <span class="keyword">system</span> <span class="variable">memory</span> <span class="keyword">no</span> <span class="variable">matter</span> <span class="variable">how</span> <span class="variable">much</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span><span class="operator">.</span>
+        
+        <span class="string">'File name'</span>  <span class="operator">=&gt;</span>  <span class="variable">$SomeFile</span>
+        
+                <span class="variable">The</span> <span class="variable">file</span> <span class="variable">name</span> <span class="variable">to</span> <span class="keyword">print</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span><span class="operator">.</span> <span class="variable">It</span> <span class="variable">does</span> <span class="keyword">not</span> <span class="variable">have</span> <span class="variable">any</span> <span class="variable">effect</span> <span class="keyword">if</span> <span class="variable">option</span> <span class="string">'Print to file'</span> <span class="variable">is</span> <span class="variable">set</span> <span class="variable">to</span> <span class="variable">No</span>
+        
+        <span class="string">'Pass to external Perl module'</span>  <span class="operator">=&gt;</span>  <span class="string">'Yes'</span> <span class="keyword">or</span> <span class="string">'no'</span>
+        
+                <span class="variable">If</span> <span class="variable">it</span> <span class="variable">is</span> <span class="variable">yes</span> <span class="variable">then</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">passed</span> <span class="variable">to</span> <span class="variable">the</span> <span class="variable">external</span> <span class="variable">Perl</span> <span class="variable">module</span> <span class="variable">at</span> <span class="variable">the</span> <span class="variable">moment</span> <span class="variable">they</span> <span class="variable">found</span> <span class="keyword">while</span> <span class="variable">the</span> <span class="variable">question</span> <span class="variable">is</span> <span class="variable">still</span> <span class="variable">working</span><span class="operator">.</span> <span class="variable">Does</span> <span class="keyword">not</span> <span class="variable">consume</span> <span class="keyword">system</span> <span class="variable">memory</span> <span class="keyword">no</span> <span class="variable">matter</span> <span class="variable">how</span> <span class="variable">much</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span> <span class="variable">are</span><span class="operator">.</span>
+                <span class="variable">The</span> <span class="variable">module's</span> <span class="variable">function</span> <span class="variable">is</span> <span class="variable">called</span> <span class="keyword">for</span> <span class="variable">every</span> <span class="variable">found</span> <span class="variable">row</span><span class="operator">.</span> <span class="variable">The</span> <span class="variable">passed</span> <span class="variable">data</span> <span class="variable">are</span> <span class="variable">the</span> <span class="keyword">values</span> <span class="variable">of</span> <span class="variable">the</span> <span class="variable">columns</span> <span class="keyword">defined</span> <span class="variable">at</span> <span class="string">'Fields to return'</span>
+        
+        <span class="string">'Perl module name'</span>  <span class="operator">=&gt;</span>  <span class="variable">$Module</span>
+        
+                <span class="variable">The</span> <span class="variable">Perl</span> <span class="variable">module</span> <span class="variable">to</span> <span class="variable">pass</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span><span class="operator">.</span> <span class="variable">It</span> <span class="variable">does</span> <span class="keyword">not</span> <span class="variable">have</span> <span class="variable">any</span> <span class="variable">effect</span> <span class="keyword">if</span> <span class="variable">option</span> <span class="string">'Pass to external Perl module'</span> <span class="variable">is</span> <span class="variable">set</span> <span class="variable">to</span> <span class="variable">No</span>
+        
+        <span class="string">'Function of the Perl module'</span>  <span class="operator">=&gt;</span>  <span class="variable">$Module::$Function</span>
+        
+                <span class="variable">The</span> <span class="variable">function</span> <span class="variable">of</span> <span class="variable">the</span> <span class="variable">external</span> <span class="variable">Perl</span> <span class="variable">module</span> <span class="variable">to</span> <span class="variable">pass</span> <span class="variable">the</span> <span class="variable">found</span> <span class="variable">data</span><span class="operator">.</span> <span class="variable">It</span> <span class="variable">does</span> <span class="keyword">not</span> <span class="variable">have</span> <span class="variable">any</span> <span class="variable">effect</span> <span class="keyword">if</span> <span class="variable">option</span> <span class="string">'Pass to external Perl module'</span> <span class="variable">is</span> <span class="variable">set</span> <span class="variable">to</span> <span class="variable">No</span>
+        
+        <span class="string">'Code of how to pass data at function'</span>  <span class="operator">=&gt;</span>  <span class="variable">perl</span> <span class="variable">code</span> <span class="variable">passing</span> <span class="variable">@_</span>
+        
+                <span class="variable">Here</span> <span class="variable">you</span> <span class="variable">can</span> <span class="variable">take</span> <span class="variable">control</span> <span class="variable">of</span> <span class="variable">how</span> <span class="variable">your</span> <span class="variable">row</span> <span class="variable">columns</span> <span class="keyword">values</span> <span class="variable">will</span> <span class="variable">passes</span> <span class="variable">at</span> <span class="variable">function</span><span class="operator">.</span> <span class="variable">You</span> <span class="variable">can</span> <span class="keyword">use</span> <span class="variable">a</span> <span class="variable">sipmle</span> <span class="string">'@_'</span> <span class="variable">to</span> <span class="variable">pass</span> <span class="variable">them</span> <span class="variable">as</span> <span class="variable">list</span><span class="operator">;</span>  <span class="string">'join ",", @_'</span>  <span class="variable">to</span> <span class="variable">pass</span> <span class="variable">the</span> <span class="variable">as</span> <span class="variable">one</span> <span class="variable">string</span> <span class="keyword">or</span> <span class="variable">whatever</span> <span class="keyword">else</span> <span class="variable">fits</span> <span class="variable">your</span> <span class="variable">needs</span><span class="operator">.</span>
+                
+        <span class="variable">here</span> <span class="variable">is</span> <span class="variable">a</span> <span class="variable">sample</span> <span class="string">'Results'</span> <span class="variable">key</span>
+        
+        <span class="string">'Results'</span> <span class="operator">=&gt;</span>   
+        <span class="operator">[</span> 
+        <span class="string">'Return an array of arrays'</span>             <span class="operator">=&gt;</span> <span class="string">'No'</span>            <span class="operator">,</span>
+        <span class="string">'Print to standard output'</span>              <span class="operator">=&gt;</span> <span class="string">'No'</span>            <span class="operator">,</span>
+        <span class="string">'Print to standard error'</span>               <span class="operator">=&gt;</span> <span class="string">'no'</span>            <span class="operator">,</span>
+        <span class="string">'Print to file'</span>                         <span class="operator">=&gt;</span> <span class="string">'Yes'</span>           <span class="operator">,</span>
+        <span class="string">'File name'</span>                             <span class="operator">=&gt;</span> <span class="string">'./answer.txt'</span>  <span class="operator">,</span>
+        <span class="string">'Pass to external Perl module'</span>          <span class="operator">=&gt;</span> <span class="string">'No '</span>           <span class="operator">,</span>
+        <span class="string">'Perl module name'</span>                      <span class="operator">=&gt;</span> <span class="string">'MIME::Base64'</span>  <span class="operator">,</span>
+        <span class="string">'Function of the Perl module'</span>           <span class="operator">=&gt;</span> <span class="string">'encode_base64'</span> <span class="operator">,</span>
+        <span class="string">'Code of how to pass data at function'</span>  <span class="operator">=&gt;</span> <span class="string">'join ",", @_'</span> 
+        <span class="operator">]</span>
+</pre>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>Some usefull basic operators you can use for 'Filters' and 'Conditions' (there are much more)</p>
+<pre>
+        eq                string equal
+        ne                string not equal
+        ==                number equal
+        !=                number not equal
+        &gt;                 number greater
+        &lt;                 number less
+        &gt;=                number greater or equal 
+        &lt;=                number less    or equal
+        gt                string greater
+        lt                string less
+        ge                string greater or equal 
+        le                string less    or equal 
+        uc                upper case
+        lc                lower case
+        =~/something/     like      case sensitive
+        =~/something/i    iike   no case sensitive</pre>
+<p>
+</p>
+<hr />
+<h1><a name="install">INSTALL</a></h1>
+<p>Because this module is implemented with pure Perl it is enough to copy FastDB directory somewhere at your @INC
+or where your script is. For your convenient you can use the following commands to install/uninstall the module</p>
+<pre>
+        Install:     setup_module.pl u-install   --module=FastDB</pre>
+<pre>
+        Uninstall:   setup_module.pl u-uninstall --module=FastDB</pre>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Author:
+<a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> (George Mpouras)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (c) 2011, George Mpouras, <a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> All rights reserved.</p>
+<p>This program is free software; you may redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

@@ -1,0 +1,5 @@
+The "command line utility version" is an earlier version of the Module.
+Because is not object like it is faster than the module
+
+George Bouras, Athens/Greece
+2 Feb 2011

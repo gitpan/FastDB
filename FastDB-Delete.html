@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FastDB::Delete - Delete selected data from FastDB database</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#example">EXAMPLE</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#functions">Functions</a></li>
+	<li><a href="#notes">NOTES</a></li>
+	<li><a href="#install">INSTALL</a></li>
+	<li><a href="#authors">AUTHORS</a></li>
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>FastDB::Delete - Delete selected data from FastDB database</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<pre>
+        <span class="keyword">use</span> <span class="variable">FastDB::Delete</span><span class="operator">;</span>
+</pre>
+<pre>
+        <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">Delete</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span>
+        <span class="string">'Schema file'</span>                      <span class="operator">=&gt;</span> <span class="variable">$SchemaFile</span><span class="operator">,</span>
+        <span class="string">'Allow deletion with no filters'</span>   <span class="operator">=&gt;</span> <span class="variable">yes</span><span class="operator">|</span><span class="keyword">no</span>     <span class="operator">,</span>
+        <span class="string">'Show activity at standard output'</span> <span class="operator">=&gt;</span> <span class="variable">yes</span><span class="operator">|</span><span class="keyword">no</span>     <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete</span><span class="operator">(</span> <span class="string">col1</span> <span class="operator">=&gt;</span> <span class="string">'Perl code1'</span> <span class="operator">,</span> <span class="string">col2</span> <span class="operator">=&gt;</span> <span class="string">'Perl code2'</span><span class="operator">,</span> <span class="operator">...</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<pre>
+        <span class="keyword">my</span> <span class="variable">$obj</span> <span class="operator">=</span> <span class="variable">Delete</span><span class="operator">-&gt;</span><span class="variable">new</span><span class="operator">(</span>
+        <span class="string">'Schema file'</span>                      <span class="operator">=&gt;</span> <span class="string">'/work/FastDB test/db/Export cargo.schema'</span><span class="operator">,</span>
+        <span class="string">'Allow deletion with no filters'</span>   <span class="operator">=&gt;</span> <span class="string">'No'</span><span class="operator">,</span>
+        <span class="string">'Show activity at standard output'</span> <span class="operator">=&gt;</span> <span class="string">'yes'</span>  <span class="operator">);</span>
+</pre>
+<pre>
+        <span class="variable">$obj</span><span class="operator">-&gt;</span><span class="variable">delete</span><span class="operator">(</span>
+        <span class="string">'WEIGHT'</span>     <span class="operator">=&gt;</span> <span class="string">'(DATA &gt; 2000) and (DATA &lt;= 100000) and ( DATA % 2 == 0)'</span> <span class="operator">,</span>
+        <span class="string">'EXTRA_YEAR'</span> <span class="operator">=&gt;</span> <span class="string">'DATA == 2011'</span> <span class="operator">);</span>
+</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Delete selected data from FastDB databases. You can select data for deletion
+using Filters. Only rows that all their column Filters are true can be deleted.</p>
+<p>You can have multiple Filters. Every Filter is assigned only to one column.
+The Filter's order is not important. Every Filter is simple Perl code. The
+last returned value of your code is examined if it is TRUE or FALSE.
+The special string DATA is replaced with column values.</p>
+<p>
+</p>
+<hr />
+<h1><a name="functions">Functions</a></h1>
+<dl>
+<dt><strong><a name="new" class="item">my $obj = Delete-&gt;new( %hash );</a></strong></dt>
+
+<dd>
+<p>Creates a new FastDB::Delete object. %hash must have the keys</p>
+<p><strong><em>Schema file</em></strong></p>
+<p>This is where your schema File is. The schema file is a unique file
+for every database, and it is created at first data load, inside data directory. Its name is &quot;$DatabaseName.schema&quot;</p>
+<p><strong><em>Allow deletion with no filters</em></strong></p>
+<p>Yes or No. If it is No, you are not allowed to delete data if you do not specify any Filters. If it yes and you
+do not define any Filters, then all your database data will be deleted.</p>
+<p><strong><em>Show activity at standard output</em></strong></p>
+<p>Yes or No. If it is yes it displays at standard output short information of its activity.</p>
+</dd>
+<dt><strong><a name="delete" class="item">$load-&gt;delete( %Filters );</a></strong></dt>
+
+<dd>
+<p>delete deletes the data. Accepts a hash with columns as keys and generic Perl code as values.
+Every filter evaluate only the data of its column. That means at Perl code you can not
+write column names . The special string DATA is replaced with current column value.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="notes">NOTES</a></h1>
+<p>This module is written with pure perl, so it can run on all operating systems. It is
+designed to work as fast your disk and operating system is.</p>
+<p>
+</p>
+<hr />
+<h1><a name="install">INSTALL</a></h1>
+<p>Because this module is implemented with pure Perl it is enough to copy FastDB directory somewhere at your @INC
+or where your script is. For your convenient you can use the following commands to install/uninstall the module</p>
+<pre>
+        Install:     setup_module.pl –-install   --module=FastDB</pre>
+<pre>
+        Uninstall:   setup_module.pl –-uninstall --module=FastDB</pre>
+<p>
+</p>
+<hr />
+<h1><a name="authors">AUTHORS</a></h1>
+<p>Author:
+<a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> (George Mpouras)</p>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (c) 2011, George Mpouras, <a href="mailto:gravitalsun@hotmail.com">gravitalsun@hotmail.com</a> All rights reserved.</p>
+<p>This program is free software; you may redistribute it and/or
+modify it under the same terms as Perl itself.</p>
+
+</body>
+
+</html>

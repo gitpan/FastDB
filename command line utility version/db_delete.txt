@@ -1,0 +1,28 @@
+Delete data from FastDB database
+
+
+Show version
+        db_delete.pl --version  (or -v --ver   etc ...)
+This help screen
+        db_delete.pl --help     (or -h --help  etc ...)
+How to load data
+        db_delete.pl [--config $ConfigFile]
+Examples
+        db_delete.pl
+        db_delete.pl -v
+        db_delete.pl --input c:\Load\log\daily.csv
+        db_delete.pl --config /etc/load.cfg  --input /opt/AppF/data
+
+
+--config is optional. It is the path of the delete configuration
+file. If it is missing, program search for a file called
+db_delete.conf  at the same directory it resides.
+
+At the configuration file write the filters for data deletion.
+All filters must be TRUE to delete a row 
+
+
+George Bouras
+1 Feb 2010
+Greece, Athens
+gravitalsun@hotmail.com
